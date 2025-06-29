@@ -1,91 +1,46 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@yield('title', 'Equal Education')</title>
+    @vite('resources/js/app.js')
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark shadow-sm" style="background-color:#565656"> 
-            <div class="container">
-                {{-- Cek jika halaman saat ini adalah "materi" --}}
-                @if (request()->is('materi*'))
-                    <a class="navbar-brand" href="{{ route('dashboard') }}">
-                        <img src="{{ asset('https://i.ibb.co.com/B5z7p8BD/logo-equal-education.png') }}" alt="EqualEdu" height="40">
-                    </a>
-                @else
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        <img src="{{ asset('https://i.ibb.co.com/B5z7p8BD/logo-equal-education.png') }}" alt="EqualEdu" height="40">
-                    </a>
-                @endif
+<body class="bg-white text-gray-800">
+<div x-data="{ sidebarOpen: false }" class="relative min-h-screen overflow-x-hidden">
+    <!-- SIDEBAR -->
+    <aside x-show="sidebarOpen" @click.outside="sidebarOpen = false" class="fixed top-0 left-0 w-64 h-full overflow-y-auto bg-gradient-to-b from-gray-600 to-gray-900 text-white p-6 z-50 shadow-xl">
+        <h2 class="text-2xl font-bold mb-6">E-LEARN</h2>
+       @auth
+    @if(Auth::user()->role == 'admin')
+        {{-- Tampilkan konten admin --}}
+    @elseif(Auth::user()->role == 'user')
+        {{-- Tampilkan konten user --}}
+    @endif
+@endauth
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+    </aside>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has(''))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has(''))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+    <!-- HEADER -->
+    <div :class="sidebarOpen ? 'ml-64' : 'ml-0'" class="transition-all duration-300">
+        <header class="bg-gray-500 text-white p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <button @click="sidebarOpen = !sidebarOpen" class="text-white text-2xl">☰</button>
+                <img src="https://i.ibb.co.com/B5z7p8BD/logo-equal-education.png" alt="Logo" class="h-12 w-auto">
             </div>
-        </nav>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="bg-red-500 px-4 py-2 rounded">Logout</button>
+            </form>
+        </header>
 
-        <main class="py-4">
+        <!-- CONTENT -->
+        <main class="mt-4 px-6">
             @yield('content')
         </main>
     </div>
+</div>
 </body>
 </html>

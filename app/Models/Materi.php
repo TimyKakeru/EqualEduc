@@ -10,7 +10,7 @@ class Materi extends Model
     use HasFactory;
 
     // Nama tabel (jika tidak sama dengan plural dari nama model)
-    protected $table = 'materi';
+    protected $table = 'materis';
 
     // Kolom yang bisa diisi secara mass-assignment
     protected $fillable = [

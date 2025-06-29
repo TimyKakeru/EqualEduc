@@ -5,7 +5,8 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MateriController;
 use App\Http\Controllers\QuizController;
-
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +18,24 @@ use App\Http\Controllers\QuizController;
 |
 */
 
+
+Route::get('/', function () {
+    return view('welcome'); // halaman awal (public)
+});
+
+// AUTH
+Auth::routes(['register' => false]); // Menonaktifkan register
+
+Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard')->middleware(['auth', 'is_admin']);
+
+Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard')->middleware(['auth']);
+
+Route::get('/redirect-role', function () {
+    if (auth()->user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+    return redirect()->route('user.dashboard');
+});
 Route::view('/', 'welcome');
 
 Route::view('dashboard', 'dashboard')
