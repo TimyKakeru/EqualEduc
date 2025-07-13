@@ -7,6 +7,7 @@ use App\Http\Controllers\MateriController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\UserMateriController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,12 +55,25 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::middleware(['auth', 'is_user'])->name('user.')->group(function () {
+    Route::get('/pdf', [UserMateriController::class, 'pdf'])->name('pdf');
+    Route::get('/video', [UserMateriController::class, 'video'])->name('video');
+    Route::get('/quiz', [UserMateriController::class, 'quiz'])->name('quiz');
+});
+
 require __DIR__.'/auth.php';
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('materis',App\Http\Controllers\Admin\MateriController::class);
+});
+
 Route::get('/materi', [MateriController::class, 'index'])->name('materi.index');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+

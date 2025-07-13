@@ -15,7 +15,7 @@ class Materi extends Model
     // Kolom yang bisa diisi secara mass-assignment
     protected $fillable = [
         'nama_materi',
-        'pemateri',
+        'nama_pemateri',
         'jenis_materi',
     ];
 }

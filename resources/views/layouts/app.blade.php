@@ -13,13 +13,40 @@
     <!-- SIDEBAR -->
     <aside x-show="sidebarOpen" @click.outside="sidebarOpen = false" class="fixed top-0 left-0 w-64 h-full overflow-y-auto bg-gradient-to-b from-gray-600 to-gray-900 text-white p-6 z-50 shadow-xl">
         <h2 class="text-2xl font-bold mb-6">E-LEARN</h2>
-       @auth
-    @if(Auth::user()->role == 'admin')
-        {{-- Tampilkan konten admin --}}
-    @elseif(Auth::user()->role == 'user')
-        {{-- Tampilkan konten user --}}
-    @endif
+    @auth
+@if(Auth::user()->role == 'admin')
+    <nav class="space-y-2">
+        <a href="{{ route('admin.dashboard') }}"
+           class="block px-4 py-2 rounded hover:bg-gray-800 {{ request()->routeIs('admin.dashboard') ? 'bg-gray-800' : '' }}">
+            📊 Dashboard
+        </a>
+        <a href=" "
+           class="block px-4 py-2 rounded hover:bg-gray-800 {{ request()->routeIs('admin.users.*') ? 'bg-gray-800' : '' }}">
+            👥 Manajemen User
+        </a>
+        <a href="{{ route('admin.materis.index') }}"
+           class="block px-4 py-2 rounded hover:bg-gray-800 {{ request()->routeIs('admin.materis.*') ? 'bg-gray-800' : '' }}">
+            📚 Manajemen Materi
+</a>
+     <a href=" "
+           class="block px-4 py-2 rounded hover:bg-gray-800 {{ request()->routeIs('admin.users.*') ? 'bg-gray-800' : '' }}">
+            📊 Statistik Pengguna
+        </a>
+    </nav>
+@elseif(Auth::user()->role == 'user')
+    <nav class="space-y-2">
+        <a href="{{ route('user.dashboard') }}"
+           class="block px-4 py-2 rounded hover:bg-gray-800 {{ request()->routeIs('user.dashboard') ? 'bg-gray-800' : '' }}">
+            🏠 Dashboard
+        </a>
+        <a href="{{ route('user.pdf') }}" class="block py-4 px-6 rounded-lg hover:bg-white/20 transition">📘 Materi</a>
+        <a href="{{ route('user.quiz') }}" class="block py-4 px-6 rounded-lg hover:bg-white/20 transition">📝 Quiz</a>
+        <a href="{{ route('user.video') }}" class="block py-4 px-6 rounded-lg hover:bg-white/20 transition">🎥 Video</a>
+        <a href="#" class="block py-4 px-6 rounded-lg hover:bg-white/20 transition">📊 History Belajar</a>
+    </nav>
+@endif
 @endauth
+
 
     </aside>
 
